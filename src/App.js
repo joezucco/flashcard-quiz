@@ -10,27 +10,33 @@ function App() {
     axios.get("https://opentdb.com/api.php?amount=10").then((res) => {
       setFlashcards(
         res.data.results.map((questionItem, index) => {
-          const answer = questionItem.correct_answer;
-          const options = [...questionItem.incorrect_answers, answer];
+          const answer = decodeStr(questionItem.correct_answer);
+          const options = [
+            ...questionItem.incorrect_answers.map((a) => decodeStr(a)),
+            answer,
+          ];
           return {
             id: `${index}-${Date.now()}`,
             question: decodeStr(questionItem.question),
-            answer: questionItem.correct_answer,
+            answer: answer,
             options: options.sort(() => Math.random() - 0.5),
           };
         })
       );
-      console.log(res.data);
     });
   }, []);
 
-  const decodeStr = str => {
-    const textArea = document.createElement('textarea')
-    textArea.innerHTML = str
-    return textArea.value
-  }
+  const decodeStr = (str) => {
+    const textArea = document.createElement("textarea");
+    textArea.innerHTML = str;
+    return textArea.value;
+  };
 
-  return <FlashcardList flashcards={flashcards} />;
+  return (
+    <div className='container'>
+      <FlashcardList flashcards={flashcards} />;
+    </div>
+  );
 }
 
 const SAMPLE_FLASHCARDS = [
