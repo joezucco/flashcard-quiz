@@ -14,7 +14,7 @@ function App() {
           const options = [...questionItem.incorrect_answers, answer];
           return {
             id: `${index}-${Date.now()}`,
-            question: questionItem.question,
+            question: decodeStr(questionItem.question),
             answer: questionItem.correct_answer,
             options: options.sort(() => Math.random() - 0.5),
           };
@@ -23,6 +23,12 @@ function App() {
       console.log(res.data);
     });
   }, []);
+
+  const decodeStr = str => {
+    const textArea = document.createElement('textarea')
+    textArea.innerHTML = str
+    return textArea.value
+  }
 
   return <FlashcardList flashcards={flashcards} />;
 }
